@@ -5,18 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.ComponentModel;
+using Microsoft.Practices.Prism.Commands;
 
 namespace WpfApplication1
 {
     public class CustomerViewModel : INotifyPropertyChanged // Point 1
     {
-        private Customer obj = new Customer();
 
-        private ButtonCommand objCommand; //  Point 1
+        private Customer obj = new Customer();
+        //private ButtonCommand objCommand;
+        private DelegateCommand objCommand;
+
         public CustomerViewModel()
         {
-            objCommand = new ButtonCommand(this); // Point 2
-           
+            //objCommand = new ButtonCommand(this.Calculate,obj.IsValid);
+            objCommand = new DelegateCommand(this.Calculate, obj.IsValid);
         }
 
         public string TxtCustomerName
@@ -27,38 +30,19 @@ namespace WpfApplication1
 
         public string TxtAmount
         {
-            get { return Convert.ToString(obj.Amount); }
+            get {
+                RaisePropertyChanged("LblAmountColor");
+                return Convert.ToString(obj.Amount);
+            }
             set { obj.Amount = Convert.ToDouble(value); }
         }
 
         public string TxtTax
         {
             get {
-                
-                //RaisePropertyChanged("TxtTax");
-
                 return Convert.ToString(obj.Tax);
             }
-            set
-
-            {
-
-                //_firstName = value;
-
-                //RaisePropertyChanged("TxtTax");
-
-            }
         }
-
-        public void RaisePropertyChanged(string propertyName)
-        {
-
-            PropertyChangedEventHandler handler = PropertyChanged;
-
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-
-        }
-
 
         public string LblAmountColor
         {
@@ -89,7 +73,11 @@ namespace WpfApplication1
                     return false;
                 }
             }
-
+            set
+            {
+                if (value) obj.Married = "Married";
+                else obj.Married = "Single";
+            }
         }
 
         public void Calculate()
@@ -98,13 +86,23 @@ namespace WpfApplication1
 
             RaisePropertyChanged("TxtTax");
 
-            if (PropertyChanged != null) // Point 2
+            /*
+            if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs("TxtTax"));
                 // Point 3
             }
+            */
         }
 
+        public void RaisePropertyChanged(string propertyName)
+        {
+
+            PropertyChangedEventHandler handler = PropertyChanged;
+
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+
+        }
 
         public ICommand btnClick // Point 3
         {
@@ -115,5 +113,7 @@ namespace WpfApplication1
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+
     }
 }

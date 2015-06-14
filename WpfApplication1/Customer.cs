@@ -8,9 +8,27 @@ namespace WpfApplication1
 {
     class Customer
     {
-        public String CustomerName="pepito";
-        public double Amount = 3000;
-        public String Married;
+        private String CustomerName_ ;
+
+        public String CustomerName
+        {
+            get { return CustomerName_; }
+            set { CustomerName_ = value; }
+        }
+        private double Amount_;
+
+        public double Amount
+        {
+            get { return Amount_; }
+            set { Amount_ = value; }
+        }
+        private String Married_;
+
+        public String Married
+        {
+            get { return Married_; }
+            set { Married_ = value; }
+        }
 
         private double _Tax;
         public double Tax
@@ -30,6 +48,18 @@ namespace WpfApplication1
             else
             {
                 _Tax = 5;
+            }
+        }
+
+        public bool IsValid()
+        {
+            if (Amount == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }
